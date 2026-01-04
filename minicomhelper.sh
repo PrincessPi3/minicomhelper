@@ -1,10 +1,10 @@
 #!/bin/bash
 # get the tty devices in /dev
-tty_list="$(ls -q /dev/tty*)" # all tty devices in /dev
+# tty_list="$(ls -q /dev/tty*)\n" # all tty devices in /dev also append newline
 ## get any frm dmesg
 tty_list+=$(dmesg | grep -o -E 'tty[A-Z0-9]{0,6}' | awk '{print "/dev/"$1}')
 ## remove any duplicates
-tty_list=$(echo $tty_list | sort -u)
+tty_list=$(echo -e "$tty_list" | sort -u)
 
 extras="" # initialize to empty
 
@@ -16,9 +16,9 @@ for tty in $tty_list; do
     echo "$tty" | grep -q -E 'tty[0-9]{0,2}$|ttyACM[0-9]{1,2}$|ttyAMA[0-9]{1,2}$|ttyprintk$'
     retcode=$? # get the return code 0 match 1 for no match
 
-    if [ $retcode -eq 1 ]; then
+    # if [ $retcode -eq 1 ]; then
         devices+="$tty\n" # create/add to devices var
-    fi
+    # fi
 done
 
 if [ -z "$devices" ]; then # devices var empty
@@ -63,8 +63,8 @@ else
     extras_trimmed=""
 fi
 
-cmd_str="minicom --device=$tty_selection --color=on${extras_trimmed}"
-echo "'$cmd_str'"
+cmd_str="minicom --device=$tty_selection -c on${extras_trimmed}"
+bash -c "$cmd_str"
 
 # --device for tty device
 # --color=on for color
