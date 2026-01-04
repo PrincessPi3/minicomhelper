@@ -1,0 +1,9 @@
+# make sure dirs get in repo, but empty except README.md files to keep from uploading any logs or w/e
+captures/*
+!captures/README.md
+
+log/*
+!log/README.md
+
+downloads/*
+!downloads/README.md
