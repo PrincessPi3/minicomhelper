@@ -25,12 +25,12 @@ echo -e "\nOptions are:"
 read -p "Enter device: " tty_selection
 
 # baud?
-read -p "Enter baudrate blank for auto: " baudrate
+read -p "Enter baudrate (common are 9600, 19200, 38400, 57600, and 11520 blank for auto: " baudrate
 if [ ! -z "$baudrate" ]; then
     extras+="--baudrate=$baudrate " # dun forger the extra space
 fi
 
-read -p "Capture session to file blank for auto? y/n" capture_choice
+read -p "Capture session to file blank for auto? y/n " capture_choice
 if [[ "$capture_choice" =~ [yY] ]]; then
     capture_file=$HOME/minicom/captures/$(date +%Y-%m-%d-%H%M-%Z)_minicom_capture
     echo "Capturing session to $capture_file"
@@ -38,7 +38,7 @@ if [[ "$capture_choice" =~ [yY] ]]; then
     extras+="--capturefile=$capture_file " # dont froget da space
 fi
 
-read -p "Hex dump view blank for auto? y/n" hex_choice
+read -p "Hex dump view blank for auto? y/n " hex_choice
 if [[ "$hex_choice" =~ [yY] ]]; then
     extras+="--displayhex "
 fi
@@ -48,8 +48,6 @@ if [ ! -e "$tty_selection" ]; then
     echo -e "FAIL: device $tty_selection does not exist"
     exit 1
 fi
-
-# echo -e "\n\nextras: $extras\n\n" extras_trimmed=" $(echo $extras | xargs) " # quick and dirty whitespace trim plus one prepended space 
 
 # --device for tty device
 # --color=on for color
