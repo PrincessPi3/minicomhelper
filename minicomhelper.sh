@@ -31,6 +31,12 @@ else
     read -p "Enter device: " tty_selection
 fi
 
+# make sure device exists as any file/dir type
+if [ ! -e "$tty_selection" ]; then
+    echo -e "FAIL: device $tty_selection does not exist"
+    exit 1
+fi
+
 # baud?
 read -p "Enter baudrate (common are 9600, 19200, 38400, 57600, and 11520 blank for auto: " baudrate
 if [ ! -z "$baudrate" ]; then
@@ -39,7 +45,7 @@ fi
 
 read -p "Capture session to file blank for auto? y/n " capture_choice
 if [[ "$capture_choice" =~ [yY] ]]; then
-    capture_file=$HOME/minicom/captures/$(date +%Y-%m-%d-%H%M-%Z)_minicom_capture
+    capture_file=$HOME/minicomhelper/captures/$(date +%Y-%m-%d-%H%M-%Z)_minicom_capture
     echo "Capturing session to $capture_file"
     touch $capture_file
     extras+="--capturefile=$capture_file " # dont froget da space
@@ -50,13 +56,16 @@ if [[ "$hex_choice" =~ [yY] ]]; then
     extras+="--displayhex "
 fi
 
-# make sure device exists as any file/dir type
-if [ ! -e "$tty_selection" ]; then
-    echo -e "FAIL: device $tty_selection does not exist"
-    exit 1
+if [ ! -z "$extras" ]; then
+    # quick and dirty whitespace trim plus prepended space
+    extras_trimmed=" $(echo $extras | xargs)" 
+else
+    extras_trimmed=""
 fi
+
+cmd_str="minicom --device=$tty_selection --color=on${extras_trimmed}"
+echo "'$cmd_str'"
 
 # --device for tty device
 # --color=on for color
 # extras trimmed has a prepended space so it butts up against color=on as minicom does not like extra spaces
-minicom --device=$tty_selection --color=on$(echo $extras_trimmed) $HOME/minicomhelper/mininicomrc.dfl

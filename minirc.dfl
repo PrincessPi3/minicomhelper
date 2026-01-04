@@ -1,0 +1,8 @@
+# custom made
+pu port             /dev/ttyUSB0
+pu escape-key       Escape (Meta)
+pu mautobaud        Yes
+pu downdir          ~/minicomhelper/downloads
+pu scriptdir        ~/minicomhelper/scripts
+pu macros           ~/minicomhelper/macros
+pu histlines        5000

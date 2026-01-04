@@ -1,5 +1,5 @@
 # custom made
-pu escape-key       Escape (Meta)
+pu escape-key       ^B
 pu mautobaud        Yes
 pu histlines        5000
 pu downdir          ~/minicomhelper/downloads
