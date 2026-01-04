@@ -1,9 +1,8 @@
 # custom made
-pu port             /dev/tty
+pu escape-key       Escape (Meta)
 pu mautobaud        Yes
+pu histlines        5000
 pu downdir          ~/minicomhelper/downloads
 pu scriptdir        ~/minicomhelper/minicom-scripts
-pu escape-key       Escape (Meta)
 pu macros           ~/minicomhelper/minicom-macros
-pu histlines        5000
 pu logfname         ~/minicomhelper/log/minicom.log

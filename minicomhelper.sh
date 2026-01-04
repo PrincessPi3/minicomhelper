@@ -1,6 +1,14 @@
 #!/bin/bash
+# get the tty devices in /dev
 tty_list="$(ls -q /dev/tty*)" # all tty devices in /dev
+## get any frm dmesg
+tty_list+=$(dmesg | grep -o -E 'tty[A-Z0-9]{0,6}' | awk '{print "/dev/"$1}')
+## remove any duplicates
+tty_list=$(echo $tty_list | sort -u)
+
 extras="" # initialize to empty
+
+echo -e "\nminicomhelper\n"
 
 # loop through tty devices in /dev
 for tty in $tty_list; do
@@ -8,7 +16,7 @@ for tty in $tty_list; do
     echo "$tty" | grep -q -E 'tty[0-9]{0,2}$|ttyACM[0-9]{1,2}$|ttyAMA[0-9]{1,2}$|ttyprintk$'
     retcode=$? # get the return code 0 match 1 for no match
 
-    if [ $retcode -eq 0 ]; then
+    if [ $retcode -eq 1 ]; then
         devices+="$tty\n" # create/add to devices var
     fi
 done
@@ -17,12 +25,11 @@ if [ -z "$devices" ]; then # devices var empty
     echo -e "\nFAIL: no good devices found\n"
     exit 1
 else
+    # get device choice 
+    echo -e "Select device options are:"
     echo -e "$devices"
+    read -p "Enter device: " tty_selection
 fi
-
-# get choice of device
-echo -e "\nOptions are:"
-read -p "Enter device: " tty_selection
 
 # baud?
 read -p "Enter baudrate (common are 9600, 19200, 38400, 57600, and 11520 blank for auto: " baudrate
@@ -52,4 +59,4 @@ fi
 # --device for tty device
 # --color=on for color
 # extras trimmed has a prepended space so it butts up against color=on as minicom does not like extra spaces
-minicom --device=$tty_selection --color=on$(echo $extras_trimmed) $HOME/minicomhelper/minirc.dfl
+minicom --device=$tty_selection --color=on$(echo $extras_trimmed) $HOME/minicomhelper/mininicomrc.dfl
